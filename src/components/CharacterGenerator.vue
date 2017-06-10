@@ -12,20 +12,24 @@
       <span id="proficency_bonus" v-text="number(proficency_bonus(character.level))"></span>
       <span id="passive_perception" v-text="10 + modifier(stats.wis) + ((skills.perception) ? proficency_bonus(character.level) : 0)"></span>
 
-      <input id="character__level" class="character character-lvl1" type="number" min="1" max="20" v-model="character.level">
       <div id="character__class" class="character character-lvl1">
         <class :class.sync="character.class"
                :hitDie.sync="character.hit_die"
                :savingThrows.sync="saving_throws"></class>
       </div>
-      <input id="character__background" class="character character-lvl1" v-model="character.background">
+      <input id="character__level" class="character character-lvl1" type="number" min="1" max="20" v-model="character.level">
+      <div id="character__background" class="character character-lvl1">
+        <background :background.sync="character.background"></background>
+      </div>
       <input id="player__name" class="character character-lvl1" v-model="player.name">
 
       <div id="character__race" class="character character-lvl2">
         <race :race.sync="character.race"
               :speed.sync="character.speed"></race>
       </div>
-      <input id="character__alignment" class="character character-lvl2" v-model="character.alignment">
+      <div id="character__alignment" class="character character-lvl2">
+        <alignment :alignment.sync="character.alignment"></alignment>
+      </div>
       <input id="character__xp" class="character character-lvl2" v-model="character.xp">
 
       <input id="weapon__one__name" class="weapon weapon__one weapon__name" v-model="weapons.one.name">
@@ -165,13 +169,17 @@
   import ClassSelector from './ClassSelector'
   import RaceSelector from './RaceSelector.vue'
   import ArmorSelector from './ArmorSelector'
+  import BackgroundSelector from './BackgroundSelector'
+  import AlignmentSelector from './AlignmentSelector'
 
   export default {
     name: 'character-generator',
     components: {
       class: ClassSelector,
       race: RaceSelector,
-      armor: ArmorSelector
+      armor: ArmorSelector,
+      background: BackgroundSelector,
+      alignment: AlignmentSelector
     },
     data () {
       return {
@@ -182,9 +190,9 @@
           name: 'Azul',
           class: undefined,
           level: 1,
-          background: 'Outlander',
-          race: 'Wood - Elf',
-          alignment: 'Neutral',
+          background: undefined,
+          race: undefined,
+          alignment: undefined,
           xp: '150 XP',
           speed: undefined,
           hit_die: undefined
@@ -198,12 +206,12 @@
           three: { name: 'Shortbow', atk: '+7', dmg: '1d6 +5 pierc.' }
         },
         stats: {
-          str: 8,
-          dex: 8,
-          const: 8,
-          int: 8,
-          wis: 8,
-          chr: 8
+          str: 10,
+          dex: 10,
+          const: 10,
+          int: 10,
+          wis: 10,
+          chr: 10
         },
         saving_throws: {
           str: false,
@@ -308,7 +316,7 @@
 
   #character__hit_points {
     position: absolute;
-    top: 24.7%;
+    top: 24.9%;
     left: 48%;
     width: 6.5%;
     height: 1.5%;
@@ -318,7 +326,7 @@
 
   #character__hit_die {
     position: absolute;
-    top: 39.9%;
+    top: 40.1%;
     left: 40.4%;
     width: 6.5%;
     height: 1.5%;
@@ -368,8 +376,8 @@
   }
 
   #character__level {
-    left: 43.8%;
-    width: 2.5%;
+    left: 44%;
+    width: 4%;
     text-align: center;
   }
 
@@ -380,7 +388,7 @@
 
   #character__background {
     left: 62.5%;
-    width: 15.5%;
+    width: 13.5%;
   }
 
   #player__name {
@@ -395,7 +403,7 @@
 
   #character__alignment {
     left: 62.5%;
-    width: 15.5%;
+    width: 13.5%;
   }
 
   #character__xp {
@@ -460,7 +468,8 @@
   .stat {
     position: absolute;
     left: 7.8%;
-    width: 3%;
+    width: 3.5%;
+    margin-left: 4px;
     height: 1.4%;
     font-size: 1.4vw;
     text-align: center;
