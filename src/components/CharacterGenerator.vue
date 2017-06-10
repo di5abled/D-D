@@ -19,7 +19,7 @@
       </div>
       <input id="character__level" class="character character-lvl1" type="number" min="1" max="20" v-model="character.level">
       <div id="character__background" class="character character-lvl1">
-        <background :background.sync="character.background"></background>
+        <background :background.sync="character.background" @change="updateBackground"></background>
       </div>
       <input id="player__name" class="character character-lvl1" v-model="player.name">
 
@@ -71,95 +71,95 @@
       <input id="stats__chr" class="stat" type="number" min="1" max="20" v-model="stats.chr">
 
 
-      <input type="checkbox" id="saving-throw__str" class="saving_skill" v-model="saving_throws.str"><label
+      <input type="checkbox" disabled id="saving-throw__str" class="saving_skill" v-model="saving_throws.str"><label
       for="saving-throw__str" class="saving_skill__label" id="saving-throw__str__label"></label>
       <span class="saving_skill__value" id="saving-throw__str__value" v-text="number(modifier(stats.str) + ((saving_throws.str) ? proficency_bonus(character.level) : 0))"></span>
 
-      <input type="checkbox" id="saving-throw__dex" class="saving_skill" v-model="saving_throws.dex"><label
+      <input type="checkbox" disabled id="saving-throw__dex" class="saving_skill" v-model="saving_throws.dex"><label
       for="saving-throw__dex" class="saving_skill__label" id="saving-throw__dex__label"></label>
       <span class="saving_skill__value" id="saving-throw__dex__value" v-text="number(modifier(stats.dex) + ((saving_throws.dex) ? proficency_bonus(character.level) : 0))"></span>
 
-      <input type="checkbox" id="saving-throw__const" class="saving_skill" v-model="saving_throws.const"><label
+      <input type="checkbox" disabled id="saving-throw__const" class="saving_skill" v-model="saving_throws.const"><label
       for="saving-throw__const" class="saving_skill__label" id="saving-throw__const__label"></label>
       <span class="saving_skill__value" id="saving-throw__const__value" v-text="number(modifier(stats.const) + ((saving_throws.const) ? proficency_bonus(character.level) : 0))"></span>
 
-      <input type="checkbox" id="saving-throw__int" class="saving_skill" v-model="saving_throws.int"><label
+      <input type="checkbox" disabled id="saving-throw__int" class="saving_skill" v-model="saving_throws.int"><label
       for="saving-throw__int" class="saving_skill__label" id="saving-throw__int__label"></label>
       <span class="saving_skill__value" id="saving-throw__int__value" v-text="number(modifier(stats.int) + ((saving_throws.int) ? proficency_bonus(character.level) : 0))"></span>
 
-      <input type="checkbox" id="saving-throw__wis" class="saving_skill" v-model="saving_throws.wis"><label
+      <input type="checkbox" disabled id="saving-throw__wis" class="saving_skill" v-model="saving_throws.wis"><label
       for="saving-throw__wis" class="saving_skill__label" id="saving-throw__wis__label"></label>
       <span class="saving_skill__value" id="saving-throw__wis__value" v-text="number(modifier(stats.wis) + ((saving_throws.wis) ? proficency_bonus(character.level) : 0))"></span>
 
-      <input type="checkbox" id="saving-throw__chr" class="saving_skill" v-model="saving_throws.chr"><label
+      <input type="checkbox" disabled id="saving-throw__chr" class="saving_skill" v-model="saving_throws.chr"><label
       for="saving-throw__chr" class="saving_skill__label" id="saving-throw__chr__label"></label>
       <span class="saving_skill__value" id="saving-throw__chr__value" v-text="number(modifier(stats.chr) + ((saving_throws.chr) ? proficency_bonus(character.level) : 0))"></span>
 
 
 
-      <input type="checkbox" id="skill__acrobatics" class="saving_skill" v-model="skills.acrobatics"><label
+      <input type="checkbox" id="skill__acrobatics" class="saving_skill" v-model="skills.acrobatics.active" :disabled="skills.acrobatics.fromBackground"><label
       for="skill__acrobatics" class="saving_skill__label" id="skill__acrobatics__label"></label>
-      <span class="saving_skill__value" id="skill__acrobatics__value" v-html="number(modifier(stats.dex) + ((skills.acrobatics) ? proficency_bonus(character.level) : 0))"></span>
+      <span class="saving_skill__value" id="skill__acrobatics__value" v-html="number(modifier(stats.dex) + ((skills.acrobatics.active) ? proficency_bonus(character.level) : 0))"></span>
 
-      <input type="checkbox" id="skill__animal_handling" class="saving_skill" v-model="skills.animal_handling"><label
+      <input type="checkbox" id="skill__animal_handling" class="saving_skill" v-model="skills.animal_handling.active" :disabled="skills.animal_handling.fromBackground"><label
       for="skill__animal_handling" class="saving_skill__label" id="skill__animal_handling__label"></label>
-      <span class="saving_skill__value" id="skill__animal_handling__value" v-html="number(modifier(stats.wis) + ((skills.animal_handling) ? proficency_bonus(character.level) : 0))"></span>
+      <span class="saving_skill__value" id="skill__animal_handling__value" v-html="number(modifier(stats.wis) + ((skills.animal_handling.active) ? proficency_bonus(character.level) : 0))"></span>
 
-      <input type="checkbox" id="skill__arcana" class="saving_skill" v-model="skills.arcana"><label for="skill__arcana" class="saving_skill__label" id="skill__arcana__label"></label>
-      <span class="saving_skill__value" id="skill__arcana__value" v-html="number(modifier(stats.int) + ((skills.arcana) ? proficency_bonus(character.level) : 0))"></span>
+      <input type="checkbox" id="skill__arcana" class="saving_skill" v-model="skills.arcana.active" :disabled="skills.arcana.fromBackground"><label for="skill__arcana" class="saving_skill__label" id="skill__arcana__label"></label>
+      <span class="saving_skill__value" id="skill__arcana__value" v-html="number(modifier(stats.int) + ((skills.arcana.active) ? proficency_bonus(character.level) : 0))"></span>
 
-      <input type="checkbox" id="skill__athletics" class="saving_skill" v-model="skills.athletics"><label
+      <input type="checkbox" id="skill__athletics" class="saving_skill" v-model="skills.athletics.active" :disabled="skills.athletics.fromBackground"><label
       for="skill__athletics" class="saving_skill__label" id="skill__athletics__label"></label>
-      <span class="saving_skill__value" id="skill__athletics__value" v-html="number(modifier(stats.str) + ((skills.athletics) ? proficency_bonus(character.level) : 0))"></span>
+      <span class="saving_skill__value" id="skill__athletics__value" v-html="number(modifier(stats.str) + ((skills.athletics.active) ? proficency_bonus(character.level) : 0))"></span>
 
-      <input type="checkbox" id="skill__deception" class="saving_skill" v-model="skills.deception"><label
+      <input type="checkbox" id="skill__deception" class="saving_skill" v-model="skills.deception.active" :disabled="skills.deception.fromBackground"><label
       for="skill__deception" class="saving_skill__label" id="skill__deception__label"></label>
-      <span class="saving_skill__value" id="skill__deception__value" v-html="number(modifier(stats.chr) + ((skills.deception) ? proficency_bonus(character.level) : 0))"></span>
+      <span class="saving_skill__value" id="skill__deception__value" v-html="number(modifier(stats.chr) + ((skills.deception.active) ? proficency_bonus(character.level) : 0))"></span>
 
-      <input type="checkbox" id="skill__history" class="saving_skill" v-model="skills.history"><label for="skill__history" class="saving_skill__label" id="skill__history__label"></label>
-      <span class="saving_skill__value" id="skill__history__value" v-html="number(modifier(stats.int) + ((skills.history) ? proficency_bonus(character.level) : 0))"></span>
+      <input type="checkbox" id="skill__history" class="saving_skill" v-model="skills.history.active" :disabled="skills.history.fromBackground"><label for="skill__history" class="saving_skill__label" id="skill__history__label"></label>
+      <span class="saving_skill__value" id="skill__history__value" v-html="number(modifier(stats.int) + ((skills.history.active) ? proficency_bonus(character.level) : 0))"></span>
 
-      <input type="checkbox" id="skill__insight" class="saving_skill" v-model="skills.insight"><label for="skill__insight" class="saving_skill__label" id="skill__insight__label"></label>
-      <span class="saving_skill__value" id="skill__insight__value" v-html="number(modifier(stats.wis) + ((skills.insight) ? proficency_bonus(character.level) : 0))"></span>
+      <input type="checkbox" id="skill__insight" class="saving_skill" v-model="skills.insight.active" :disabled="skills.insight.fromBackground"><label for="skill__insight" class="saving_skill__label" id="skill__insight__label"></label>
+      <span class="saving_skill__value" id="skill__insight__value" v-html="number(modifier(stats.wis) + ((skills.insight.active) ? proficency_bonus(character.level) : 0))"></span>
 
-      <input type="checkbox" id="skill__intimidation" class="saving_skill" v-model="skills.intimidation"><label
+      <input type="checkbox" id="skill__intimidation" class="saving_skill" v-model="skills.intimidation.active" :disabled="skills.intimidation.fromBackground"><label
       for="skill__intimidation" class="saving_skill__label" id="skill__intimidation__label"></label>
-      <span class="saving_skill__value" id="skill__intimidation__value" v-html="number(modifier(stats.chr) + ((skills.intimidation) ? proficency_bonus(character.level) : 0))"></span>
+      <span class="saving_skill__value" id="skill__intimidation__value" v-html="number(modifier(stats.chr) + ((skills.intimidation.active) ? proficency_bonus(character.level) : 0))"></span>
 
-      <input type="checkbox" id="skill__investigation" class="saving_skill" v-model="skills.investigation"><label
+      <input type="checkbox" id="skill__investigation" class="saving_skill" v-model="skills.investigation.active" :disabled="skills.investigation.fromBackground"><label
       for="skill__investigation" class="saving_skill__label" id="skill__investigation__label"></label>
-      <span class="saving_skill__value" id="skill__investigation__value" v-html="number(modifier(stats.int) + ((skills.investigation) ? proficency_bonus(character.level) : 0))"></span>
+      <span class="saving_skill__value" id="skill__investigation__value" v-html="number(modifier(stats.int) + ((skills.investigation.active) ? proficency_bonus(character.level) : 0))"></span>
 
-      <input type="checkbox" id="skill__medicine" class="saving_skill" v-model="skills.medicine"><label for="skill__medicine" class="saving_skill__label" id="skill__medicine__label"></label>
-      <span class="saving_skill__value" id="skill__medicine__value" v-html="number(modifier(stats.wis) + ((skills.medicine) ? proficency_bonus(character.level) : 0))"></span>
+      <input type="checkbox" id="skill__medicine" class="saving_skill" v-model="skills.medicine.active" :disabled="skills.medicine.fromBackground"><label for="skill__medicine" class="saving_skill__label" id="skill__medicine__label"></label>
+      <span class="saving_skill__value" id="skill__medicine__value" v-html="number(modifier(stats.wis) + ((skills.medicine.active) ? proficency_bonus(character.level) : 0))"></span>
 
-      <input type="checkbox" id="skill__nature" class="saving_skill" v-model="skills.nature"><label for="skill__nature" class="saving_skill__label" id="skill__nature__label"></label>
-      <span class="saving_skill__value" id="skill__nature__value" v-html="number(modifier(stats.int) + ((skills.nature) ? proficency_bonus(character.level) : 0))"></span>
+      <input type="checkbox" id="skill__nature" class="saving_skill" v-model="skills.nature.active" :disabled="skills.nature.fromBackground"><label for="skill__nature" class="saving_skill__label" id="skill__nature__label"></label>
+      <span class="saving_skill__value" id="skill__nature__value" v-html="number(modifier(stats.int) + ((skills.nature.active) ? proficency_bonus(character.level) : 0))"></span>
 
-      <input type="checkbox" id="skill__perception" class="saving_skill" v-model="skills.perception"><label
+      <input type="checkbox" id="skill__perception" class="saving_skill" v-model="skills.perception.active" :disabled="skills.perception.fromBackground"><label
       for="skill__perception" class="saving_skill__label" id="skill__perception__label"></label>
-      <span class="saving_skill__value" id="skill__perception__value" v-html="number(modifier(stats.wis) + ((skills.perception) ? proficency_bonus(character.level) : 0))"></span>
+      <span class="saving_skill__value" id="skill__perception__value" v-html="number(modifier(stats.wis) + ((skills.perception.active) ? proficency_bonus(character.level) : 0))"></span>
 
-      <input type="checkbox" id="skill__performance" class="saving_skill" v-model="skills.performance"><label
+      <input type="checkbox" id="skill__performance" class="saving_skill" v-model="skills.performance.active" :disabled="skills.performance.fromBackground"><label
       for="skill__performance" class="saving_skill__label" id="skill__performance__label"></label>
-      <span class="saving_skill__value" id="skill__performance__value" v-html="number(modifier(stats.chr) + ((skills.performance) ? proficency_bonus(character.level) : 0))"></span>
+      <span class="saving_skill__value" id="skill__performance__value" v-html="number(modifier(stats.chr) + ((skills.performance.active) ? proficency_bonus(character.level) : 0))"></span>
 
-      <input type="checkbox" id="skill__persuasion" class="saving_skill" v-model="skills.persuasion"><label
+      <input type="checkbox" id="skill__persuasion" class="saving_skill" v-model="skills.persuasion.active" :disabled="skills.persuasion.fromBackground"><label
       for="skill__persuasion" class="saving_skill__label" id="skill__persuasion__label"></label>
-      <span class="saving_skill__value" id="skill__persuasion__value" v-html="number(modifier(stats.chr) + ((skills.persuasion) ? proficency_bonus(character.level) : 0))"></span>
+      <span class="saving_skill__value" id="skill__persuasion__value" v-html="number(modifier(stats.chr) + ((skills.persuasion.active) ? proficency_bonus(character.level) : 0))"></span>
 
-      <input type="checkbox" id="skill__religion" class="saving_skill" v-model="skills.religion"><label for="skill__religion" class="saving_skill__label" id="skill__religion__label"></label>
-      <span class="saving_skill__value" id="skill__religion__value" v-html="number(modifier(stats.int) + ((skills.religion) ? proficency_bonus(character.level) : 0))"></span>
+      <input type="checkbox" id="skill__religion" class="saving_skill" v-model="skills.religion.active" :disabled="skills.religion.fromBackground"><label for="skill__religion" class="saving_skill__label" id="skill__religion__label"></label>
+      <span class="saving_skill__value" id="skill__religion__value" v-html="number(modifier(stats.int) + ((skills.religion.active) ? proficency_bonus(character.level) : 0))"></span>
 
-      <input type="checkbox" id="skill__sleight_of_hand" class="saving_skill" v-model="skills.sleight_of_hand"><label
+      <input type="checkbox" id="skill__sleight_of_hand" class="saving_skill" v-model="skills.sleight_of_hand.active" :disabled="skills.sleight_of_hand.fromBackground"><label
       for="skill__sleight_of_hand" class="saving_skill__label" id="skill__sleight_of_hand__label"></label>
-      <span class="saving_skill__value" id="skill__sleight_of_hand__value" v-html="number(modifier(stats.dex) + ((skills.sleight_of_hand) ? proficency_bonus(character.level) : 0))"></span>
+      <span class="saving_skill__value" id="skill__sleight_of_hand__value" v-html="number(modifier(stats.dex) + ((skills.sleight_of_hand.active) ? proficency_bonus(character.level) : 0))"></span>
 
-      <input type="checkbox" id="skill__stealth" class="saving_skill" v-model="skills.stealth"><label for="skill__stealth" class="saving_skill__label" id="skill__stealth__label"></label>
-      <span class="saving_skill__value" id="skill__stealth__value" v-html="number(modifier(stats.dex) + ((skills.stealth) ? proficency_bonus(character.level) : 0))"></span>
+      <input type="checkbox" id="skill__stealth" class="saving_skill" v-model="skills.stealth.active" :disabled="skills.stealth.fromBackground"><label for="skill__stealth" class="saving_skill__label" id="skill__stealth__label"></label>
+      <span class="saving_skill__value" id="skill__stealth__value" v-html="number(modifier(stats.dex) + ((skills.stealth.active) ? proficency_bonus(character.level) : 0))"></span>
 
-      <input type="checkbox" id="skill__survival" class="saving_skill" v-model="skills.survival"><label for="skill__survival" class="saving_skill__label" id="skill__survival__label"></label>
-      <span class="saving_skill__value" id="skill__survival__value" v-html="number(modifier(stats.wis) + ((skills.survival) ? proficency_bonus(character.level) : 0))"></span>
+      <input type="checkbox" id="skill__survival" class="saving_skill" v-model="skills.survival.active" :disabled="skills.survival.fromBackground"><label for="skill__survival" class="saving_skill__label" id="skill__survival__label"></label>
+      <span class="saving_skill__value" id="skill__survival__value" v-html="number(modifier(stats.wis) + ((skills.survival.active) ? proficency_bonus(character.level) : 0))"></span>
     </section>
 </template>
 
@@ -184,16 +184,16 @@
     data () {
       return {
         player: {
-          name: 'M@'
+          name: ''
         },
         character: {
-          name: 'Azul',
+          name: '',
           class: undefined,
           level: 1,
           background: undefined,
           race: undefined,
           alignment: undefined,
-          xp: '150 XP',
+          xp: '',
           speed: undefined,
           hit_die: undefined
         },
@@ -222,24 +222,24 @@
           chr: false
         },
         skills: {
-          acrobatics: false,
-          animal_handling: false,
-          arcana: false,
-          athletics: false,
-          deception: false,
-          history: false,
-          insight: false,
-          intimidation: false,
-          investigation: false,
-          medicine: false,
-          nature: false,
-          perception: false,
-          performance: false,
-          persuasion: false,
-          religion: false,
-          sleight_of_hand: false,
-          stealth: false,
-          survival: false
+          acrobatics: { fromBackground: false, active: false },
+          animal_handling: { fromBackground: false, active: false },
+          arcana: { fromBackground: false, active: false },
+          athletics: { fromBackground: false, active: false },
+          deception: { fromBackground: false, active: false },
+          history: { fromBackground: false, active: false },
+          insight: { fromBackground: false, active: false },
+          intimidation: { fromBackground: false, active: false },
+          investigation: { fromBackground: false, active: false },
+          medicine: { fromBackground: false, active: false },
+          nature: { fromBackground: false, active: false },
+          perception: { fromBackground: false, active: false },
+          performance: { fromBackground: false, active: false },
+          persuasion: { fromBackground: false, active: false },
+          religion: { fromBackground: false, active: false },
+          sleight_of_hand: { fromBackground: false, active: false },
+          stealth: { fromBackground: false, active: false },
+          survival: { fromBackground: false, active: false }
         }
       }
     },
@@ -252,6 +252,20 @@
       },
       proficency_bonus (level) {
         return Math.ceil(level / 4) + 1
+      },
+      updateBackground (event) {
+        for (let skill in this.skills) {
+          if (this.skills[skill].fromBackground) {
+            this.skills[skill].active = false
+          }
+
+          this.skills[skill].fromBackground = false
+        }
+
+        for (let backgrounsSkill in event.skills) {
+          this.skills[backgrounsSkill].fromBackground = true
+          this.skills[backgrounsSkill].active = true
+        }
       }
     }
   }
@@ -532,6 +546,9 @@
     padding-bottom: 0.8%;
     width: 0.8%;
     height: 0;
+  }
+
+  input[type=checkbox]:not([disabled]) + .saving_skill__label {
     cursor: pointer;
   }
 
