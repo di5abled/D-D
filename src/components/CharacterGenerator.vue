@@ -6,18 +6,25 @@
       <span class="char-add-infos" id="initiative" v-text="number(modifier(stats.dex))"></span>
       <input class="char-add-infos" id="character__speed" v-model="character.speed">
 
-      <input id="character__hit_points" v-model="character.hit_points">
-      <input id="character__hit_dice" v-model="character.hit_dice">
+      <span id="character__hit_points" v-text="character.hit_die + modifier(stats.const) + ((character.level - 1) * (character.hit_die / 2 + modifier(stats.const)))"></span>
+      <span id="character__hit_die" v-text="character.level + 'd' + character.hit_die"></span>
 
       <span id="proficency_bonus" v-text="number(proficency_bonus(character.level))"></span>
       <span id="passive_perception" v-text="10 + modifier(stats.wis) + ((skills.perception) ? proficency_bonus(character.level) : 0)"></span>
 
-      <input id="character__level" class="character character-lvl1" v-model="character.level">
-      <input id="character__class" class="character character-lvl1" v-model="character.class">
+      <input id="character__level" class="character character-lvl1" type="number" min="1" max="20" v-model="character.level">
+      <div id="character__class" class="character character-lvl1">
+        <class :class.sync="character.class"
+               :hitDie.sync="character.hit_die"
+               :savingThrows.sync="saving_throws"></class>
+      </div>
       <input id="character__background" class="character character-lvl1" v-model="character.background">
       <input id="player__name" class="character character-lvl1" v-model="player.name">
 
-      <input id="character__race" class="character character-lvl2" v-model="character.race">
+      <div id="character__race" class="character character-lvl2">
+        <race :race.sync="character.race"
+              :speed.sync="character.speed"></race>
+      </div>
       <input id="character__alignment" class="character character-lvl2" v-model="character.alignment">
       <input id="character__xp" class="character character-lvl2" v-model="character.xp">
 
@@ -42,22 +49,22 @@
 
 
       <span id="stats__str__modifier" class="stat-modifier" v-text="number(modifier(stats.str))"></span>
-      <input id="stats__str" class="stat" v-model="stats.str">
+      <input id="stats__str" class="stat" type="number" min="1" max="20" v-model="stats.str">
 
       <span id="stats__dex__modifier" class="stat-modifier" v-text="number(modifier(stats.dex))"></span>
-      <input id="stats__dex" class="stat" v-model="stats.dex">
+      <input id="stats__dex" class="stat" type="number" min="1" max="20" v-model="stats.dex">
 
       <span id="stats__const__modifier" class="stat-modifier" v-text="number(modifier(stats.const))"></span>
-      <input id="stats__const" class="stat" v-model="stats.const">
+      <input id="stats__const" class="stat" type="number" min="1" max="20" v-model="stats.const">
 
       <span id="stats__int__modifier" class="stat-modifier" v-text="number(modifier(stats.int))"></span>
-      <input id="stats__int" class="stat" v-model="stats.int">
+      <input id="stats__int" class="stat" type="number" min="1" max="20" v-model="stats.int">
 
       <span id="stats__wis__modifier" class="stat-modifier" v-text="number(modifier(stats.wis))"></span>
-      <input id="stats__wis" class="stat" v-model="stats.wis">
+      <input id="stats__wis" class="stat" type="number" min="1" max="20" v-model="stats.wis">
 
       <span id="stats__chr__modifier" class="stat-modifier" v-text="number(modifier(stats.chr))"></span>
-      <input id="stats__chr" class="stat" v-model="stats.chr">
+      <input id="stats__chr" class="stat" type="number" min="1" max="20" v-model="stats.chr">
 
 
       <input type="checkbox" id="saving-throw__str" class="saving_skill" v-model="saving_throws.str"><label
@@ -155,11 +162,15 @@
 
 
 <script>
+  import ClassSelector from './ClassSelector'
+  import RaceSelector from './RaceSelector.vue'
   import ArmorSelector from './ArmorSelector'
 
   export default {
     name: 'character-generator',
     components: {
+      class: ClassSelector,
+      race: RaceSelector,
       armor: ArmorSelector
     },
     data () {
@@ -169,15 +180,14 @@
         },
         character: {
           name: 'Azul',
-          class: 'Sorcerer',
+          class: undefined,
           level: 1,
           background: 'Outlander',
           race: 'Wood - Elf',
           alignment: 'Neutral',
           xp: '150 XP',
-          speed: 30,
-          hit_points: 9,
-          hit_dice: '1d6'
+          speed: undefined,
+          hit_die: undefined
         },
         armor: {
           class: undefined
@@ -188,40 +198,40 @@
           three: { name: 'Shortbow', atk: '+7', dmg: '1d6 +5 pierc.' }
         },
         stats: {
-          str: 15,
-          dex: 17,
-          const: 10,
-          int: 11,
-          wis: 15,
-          chr: 11
+          str: 8,
+          dex: 8,
+          const: 8,
+          int: 8,
+          wis: 8,
+          chr: 8
         },
         saving_throws: {
-          str: true,
-          dex: true,
-          const: true,
-          int: true,
-          wis: true,
-          chr: true
+          str: false,
+          dex: false,
+          const: false,
+          int: false,
+          wis: false,
+          chr: false
         },
         skills: {
-          acrobatics: true,
-          animal_handling: true,
-          arcana: true,
-          athletics: true,
-          deception: true,
-          history: true,
-          insight: true,
-          intimidation: true,
-          investigation: true,
-          medicine: true,
-          nature: true,
-          perception: true,
-          performance: true,
-          persuasion: true,
-          religion: true,
-          sleight_of_hand: true,
-          stealth: true,
-          survival: true
+          acrobatics: false,
+          animal_handling: false,
+          arcana: false,
+          athletics: false,
+          deception: false,
+          history: false,
+          insight: false,
+          intimidation: false,
+          investigation: false,
+          medicine: false,
+          nature: false,
+          perception: false,
+          performance: false,
+          persuasion: false,
+          religion: false,
+          sleight_of_hand: false,
+          stealth: false,
+          survival: false
         }
       }
     },
@@ -306,7 +316,7 @@
     text-align: left;
   }
 
-  #character__hit_dice {
+  #character__hit_die {
     position: absolute;
     top: 39.9%;
     left: 40.4%;
@@ -365,7 +375,7 @@
 
   #character__class {
     left: 46.5%;
-    width: 16%;
+    width: 13.3%;
   }
 
   #character__background {
@@ -380,7 +390,7 @@
 
   #character__race {
     left: 44%;
-    width: 10.75%;
+    width: 15.75%;
   }
 
   #character__alignment {
