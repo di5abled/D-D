@@ -32,17 +32,35 @@
       </div>
       <input id="character__xp" class="character character-lvl2" v-model="character.xp">
 
-      <input id="weapon__one__name" class="weapon weapon__one weapon__name" v-model="weapons.one.name">
-      <input id="weapon__one__atk" class="weapon weapon__one weapon__atk" v-model="weapons.one.atk">
-      <input id="weapon__one__dmg" class="weapon weapon__one weapon__dmg" v-model="weapons.one.dmg">
+      <div id="weapon__one__name" class="weapon weapon__one weapon__name">
+      <weapon :weapon.sync="weapons.one"></weapon>
+    </div>
+      <span id="weapon__one__atk" class="weapon weapon__one weapon__atk">
+        + {{ proficency_bonus(character.level) + modifier(stats[weapons.one.modifier]) }}
+      </span>
+      <span id="weapon__one__dmg" class="weapon weapon__one weapon__dmg">
+        {{ weapons.one.dmg }} +{{ modifier(stats[weapons.one.modifier]) }} {{ weapons.one.type }}
+      </span>
 
-      <input id="weapon__two__name" class="weapon weapon__two weapon__name" v-model="weapons.two.name">
-      <input id="weapon__two__atk" class="weapon weapon__two weapon__atk" v-model="weapons.two.atk">
-      <input id="weapon__two__dmg" class="weapon weapon__two weapon__dmg" v-model="weapons.two.dmg">
+      <div id="weapon__two__name" class="weapon weapon__two weapon__name">
+        <weapon :weapon.sync="weapons.two"></weapon>
+      </div>
+      <span id="weapon__two__atk" class="weapon weapon__two weapon__atk">
+        + {{ proficency_bonus(character.level) + modifier(stats[weapons.two.modifier]) }}
+      </span>
+      <span id="weapon__two__dmg" class="weapon weapon__two weapon__dmg">
+        {{ weapons.two.dmg }} +{{ modifier(stats[weapons.two.modifier]) }} {{ weapons.two.type }}
+      </span>
 
-      <input id="weapon__three__name" class="weapon weapon__three weapon__name" v-model="weapons.three.name">
-      <input id="weapon__three__atk" class="weapon weapon__three weapon__atk" v-model="weapons.three.atk">
-      <input id="weapon__three__dmg" class="weapon weapon__three weapon__dmg" v-model="weapons.one.dmg">
+      <div id="weapon__three__name" class="weapon weapon__three weapon__name">
+        <weapon :weapon.sync="weapons.three"></weapon>
+      </div>
+      <span id="weapon__three__atk" class="weapon weapon__three weapon__atk">
+        + {{ proficency_bonus(character.level) + modifier(stats[weapons.three.modifier]) }}
+      </span>
+      <span id="weapon__three__dmg" class="weapon weapon__three weapon__dmg">
+        {{ weapons.three.dmg }} +{{ modifier(stats[weapons.three.modifier]) }} {{ weapons.three.type }}
+      </span>
 
 
       <div id="armor">
@@ -168,18 +186,20 @@
 <script>
   import ClassSelector from './ClassSelector'
   import RaceSelector from './RaceSelector.vue'
-  import ArmorSelector from './ArmorSelector'
   import BackgroundSelector from './BackgroundSelector'
   import AlignmentSelector from './AlignmentSelector'
+  import WeaponSelector from './WeaponSelector'
+  import ArmorSelector from './ArmorSelector'
 
   export default {
     name: 'character-generator',
     components: {
       class: ClassSelector,
       race: RaceSelector,
-      armor: ArmorSelector,
       background: BackgroundSelector,
-      alignment: AlignmentSelector
+      alignment: AlignmentSelector,
+      armor: ArmorSelector,
+      weapon: WeaponSelector
     },
     data () {
       return {
@@ -188,22 +208,22 @@
         },
         character: {
           name: '',
-          class: undefined,
           level: 1,
-          background: undefined,
-          race: undefined,
-          alignment: undefined,
           xp: '',
+          alignment: undefined,
+          race: undefined,
           speed: undefined,
-          hit_die: undefined
+          class: undefined,
+          hit_die: undefined,
+          background: undefined
         },
         armor: {
           class: undefined
         },
         weapons: {
-          one: { name: 'Shortsword', atk: '+5', dmg: '1d6 +3 pierc.' },
-          two: { name: 'Dagger', atk: '+4', dmg: '1d4 +2 slash.' },
-          three: { name: 'Shortbow', atk: '+7', dmg: '1d6 +5 pierc.' }
+          one: {},
+          two: {},
+          three: {}
         },
         stats: {
           str: 10,
@@ -331,7 +351,7 @@
   #character__hit_points {
     position: absolute;
     top: 24.9%;
-    left: 48%;
+    left: 47.5%;
     width: 6.5%;
     height: 1.5%;
     font-size: 1.5vw;
@@ -433,20 +453,20 @@
   }
 
   .weapon__one {
-    top: 49.5%;
+    top: 49.6%;
   }
 
   .weapon__two {
-    top: 52%;
+    top: 52.1%;
   }
 
   .weapon__three {
-    top: 54.7%;
+    top: 54.8%;
   }
 
   .weapon__name {
-    left: 36.7%;
-    width: 9.7%;
+    left: 36%;
+    width: 11%;
   }
 
   .weapon__atk {
@@ -457,6 +477,11 @@
   .weapon__dmg {
     left: 53.8%;
     width: 9.2%;
+    height: 2%;
+    font-size: 1.5vw;
+    line-height: 2em;
+    word-break: break-all;
+    overflow: hidden;
   }
 
 
