@@ -12,29 +12,25 @@
       <span id="proficency_bonus" v-text="number(proficency_bonus(character.level))"></span>
       <span id="passive_perception" v-text="10 + modifier(stats.wis) + ((skills.perception) ? proficency_bonus(character.level) : 0)"></span>
 
-      <div id="character__class" class="character character-lvl1">
-        <class :class.sync="character.class"
-               :hitDie.sync="character.hit_die"
-               :savingThrows.sync="saving_throws"></class>
-      </div>
+      <class id="character__class" class="character character-lvl1"
+             :class.sync="character.class"
+             :hitDie.sync="character.hit_die"
+             :savingThrows.sync="saving_throws"></class>
       <input id="character__level" class="character character-lvl1" type="number" min="1" max="20" v-model="character.level">
-      <div id="character__background" class="character character-lvl1">
-        <background :background.sync="character.background" @change="updateBackground"></background>
-      </div>
+      <background id="character__background" class="character character-lvl1"
+                  :background.sync="character.background"
+                  @change="updateBackground"></background>
       <input id="player__name" class="character character-lvl1" v-model="player.name">
 
-      <div id="character__race" class="character character-lvl2">
-        <race :race.sync="character.race"
-              :speed.sync="character.speed"></race>
-      </div>
-      <div id="character__alignment" class="character character-lvl2">
-        <alignment :alignment.sync="character.alignment"></alignment>
-      </div>
+      <race id="character__race" class="character character-lvl2"
+            :race.sync="character.race"
+            :speed.sync="character.speed"></race>
+      <alignment id="character__alignment" class="character character-lvl2"
+                 :alignment.sync="character.alignment"></alignment>
       <input id="character__xp" class="character character-lvl2" v-model="character.xp">
 
-      <div id="weapon__one__name" class="weapon weapon__one weapon__name">
-      <weapon :weapon.sync="weapons.one"></weapon>
-    </div>
+      <weapon id="weapon__one__name" class="weapon weapon__one weapon__name"
+              :weapon.sync="weapons.one"></weapon>
       <span id="weapon__one__atk" class="weapon weapon__one weapon__atk">
         + {{ proficency_bonus(character.level) + modifier(stats[weapons.one.modifier]) }}
       </span>
@@ -42,9 +38,8 @@
         {{ weapons.one.dmg }} +{{ modifier(stats[weapons.one.modifier]) }} {{ weapons.one.type }}
       </span>
 
-      <div id="weapon__two__name" class="weapon weapon__two weapon__name">
-        <weapon :weapon.sync="weapons.two"></weapon>
-      </div>
+      <weapon id="weapon__two__name" class="weapon weapon__two weapon__name"
+              :weapon.sync="weapons.two"></weapon>
       <span id="weapon__two__atk" class="weapon weapon__two weapon__atk">
         + {{ proficency_bonus(character.level) + modifier(stats[weapons.two.modifier]) }}
       </span>
@@ -52,9 +47,8 @@
         {{ weapons.two.dmg }} +{{ modifier(stats[weapons.two.modifier]) }} {{ weapons.two.type }}
       </span>
 
-      <div id="weapon__three__name" class="weapon weapon__three weapon__name">
-        <weapon :weapon.sync="weapons.three"></weapon>
-      </div>
+      <weapon id="weapon__three__name" class="weapon weapon__three weapon__name"
+              :weapon.sync="weapons.three"></weapon>
       <span id="weapon__three__atk" class="weapon weapon__three weapon__atk">
         + {{ proficency_bonus(character.level) + modifier(stats[weapons.three.modifier]) }}
       </span>
