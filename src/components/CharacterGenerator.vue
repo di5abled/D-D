@@ -6,14 +6,14 @@
       <span class="char-add-infos" id="initiative" v-text="number(modifier(stats.dex))"></span>
       <input class="char-add-infos" id="character__speed" v-model="character.speed">
 
-      <span id="character__hit_points" v-text="character.hit_die + modifier(stats.const) + ((character.level - 1) * (character.hit_die / 2 + modifier(stats.const)))"></span>
-      <span id="character__hit_die" v-text="character.level + 'd' + character.hit_die"></span>
+      <span id="character__hit_points" v-text="hit_points"></span>
+      <span id="character__hit_die" v-text="hit_die"></span>
 
       <span id="proficency_bonus" v-text="number(proficency_bonus(character.level))"></span>
-      <span id="passive_perception" v-text="10 + modifier(stats.wis) + ((skills.perception) ? proficency_bonus(character.level) : 0)"></span>
+      <span id="passive_perception" v-text="passive_perception"></span>
 
       <class id="character__class" class="character character-lvl1"
-             :class.sync="character.class"
+             :classType.sync="character.class"
              :hitDie.sync="character.hit_die"
              :savingThrows.sync="saving_throws"></class>
       <input id="character__level" class="character character-lvl1" type="number" min="1" max="20" v-model="character.level">
@@ -255,6 +255,17 @@
           stealth: { fromBackground: false, active: false },
           survival: { fromBackground: false, active: false }
         }
+      }
+    },
+    computed: {
+      hit_points () {
+        return this.character.hit_die + this.modifier(this.stats.const) + ((this.character.level - 1) * (this.character.hit_die / 2 + this.modifier(this.stats.const)))
+      },
+      hit_die () {
+        return this.character.level + 'd' + this.character.hit_die
+      },
+      passive_perception () {
+        return 10 + this.modifier(this.stats.wis) + ((this.skills.perception.active) ? this.proficency_bonus(this.character.level) : 0)
       }
     },
     methods: {
